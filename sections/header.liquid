@@ -1,0 +1,140 @@
+<header class="site-header{% if section.settings.transparent_on_home and template.name == 'index' %} is-transparent{% endif %}"
+  data-transparent="{{ section.settings.transparent_on_home }}"
+  role="banner">
+  <div class="header-inner">
+
+    {%- comment -%} Left — desktop nav {%- endcomment -%}
+    <nav class="header-nav" role="navigation" aria-label="Main navigation">
+      {%- for link in linklists[section.settings.menu].links -%}
+        {%- if link.links != blank -%}
+          <div class="header-nav__item">
+            <a href="{{ link.url }}" class="header-nav__link{% if link.active %} is-active{% endif %}">
+              {{ link.title }}
+            </a>
+            <div class="header-nav__dropdown">
+              {%- for child in link.links -%}
+                <a href="{{ child.url }}" class="header-nav__dropdown-link">{{ child.title }}</a>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- else -%}
+          <a href="{{ link.url }}" class="header-nav__link{% if link.active %} is-active{% endif %}">
+            {{ link.title }}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    {%- comment -%} Center — logo {%- endcomment -%}
+    <div class="header-logo">
+      <a href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+        {%- if section.settings.logo != blank -%}
+          {%- assign image_size = section.settings.logo_max_width | prepend: 'x' -%}
+          <img class="header-logo__img"
+            src="{{ section.settings.logo | img_url: image_size }}"
+            alt="{{ section.settings.logo.alt | default: shop.name }}"
+            width="{{ section.settings.logo_max_width }}"
+            loading="eager">
+        {%- else -%}
+          <span class="header-logo__text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- comment -%} Right — actions {%- endcomment -%}
+    <div class="header-actions">
+
+      {%- if section.settings.show_search -%}
+        <a href="{{ routes.search_url }}" class="icon-btn" aria-label="Search">
+          {% render 'icon-search' %}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.show_account -%}
+        <a href="{{ routes.account_url }}" class="icon-btn" aria-label="Account">
+          {% render 'icon-account' %}
+        </a>
+      {%- endif -%}
+
+      <button class="icon-btn" data-cart-open aria-label="Open cart ({{ cart.item_count }} items)">
+        {% render 'icon-cart' %}
+        {%- if cart.item_count > 0 -%}
+          <span class="cart-count" aria-hidden="true">{{ cart.item_count }}</span>
+        {%- endif -%}
+      </button>
+
+      <button class="icon-btn header-menu-btn" data-nav-open aria-label="Open menu" aria-expanded="false" aria-controls="MobileNav">
+        {% render 'icon-hamburger' %}
+      </button>
+
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header { position: sticky; top: 0; z-index: 90; }
+  .cart-count {
+    position: absolute;
+    top: 5px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    background: var(--color-text);
+    color: var(--color-surface);
+    border-radius: 50%;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .icon-btn { position: relative; }
+</style>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "site-header-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo max width",
+      "default": 160
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Main menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_on_home",
+      "label": "Transparent header on homepage",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

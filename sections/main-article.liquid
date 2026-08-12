@@ -1,0 +1,53 @@
+<article class="article-page" itemscope itemtype="http://schema.org/Article">
+  <div class="container">
+
+    <header class="article-header">
+      {%- if article.tags.size > 0 -%}
+        <p class="article-tag">{{ article.tags | join: ', ' }}</p>
+      {%- endif -%}
+
+      <h1 class="article-title" itemprop="name">{{ article.title }}</h1>
+
+      <p class="article-meta">
+        <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span itemprop="name">{{ article.author }}</span>
+        </span>
+        <span style="margin-inline: 0.75rem">·</span>
+        <time itemprop="datePublished" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{ article.published_at | date: '%B %d, %Y' }}
+        </time>
+      </p>
+    </header>
+
+    {%- if article.image -%}
+      <img
+        class="article-featured-image"
+        src="{{ article.image | img_url: '1600x' }}"
+        srcset="{{ article.image | img_url: '800x' }} 800w,
+                {{ article.image | img_url: '1200x' }} 1200w,
+                {{ article.image | img_url: '1600x' }} 1600w"
+        sizes="100vw"
+        alt="{{ article.image.alt | default: article.title }}"
+        width="{{ article.image.width }}"
+        height="{{ article.image.height }}"
+        loading="eager"
+        itemprop="image">
+    {%- endif -%}
+
+    <div class="article-body" itemprop="articleBody">
+      {{ article.content }}
+    </div>
+
+    <div style="max-width:720px; margin-inline:auto; padding-top: var(--sp-10); border-top: 1px solid var(--color-border); margin-top: var(--sp-10);">
+      <a href="{{ blog.url }}" class="btn btn--outline btn--sm">← Back to {{ blog.title }}</a>
+    </div>
+
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": []
+}
+{% endschema %}

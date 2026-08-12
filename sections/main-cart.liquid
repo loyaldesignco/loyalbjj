@@ -1,0 +1,120 @@
+<div class="cart-page">
+  <div class="container">
+    <h1 class="cart-page__title">Your Cart</h1>
+
+    {%- if cart.item_count > 0 -%}
+
+      {%- form 'cart', cart, id: 'CartForm' -%}
+        <div class="cart-page-layout">
+
+          {%- comment -%} Line items {%- endcomment -%}
+          <div class="cart-page__items">
+            <table class="cart-table">
+              <thead>
+                <tr>
+                  <th colspan="2">Product</th>
+                  <th style="text-align:center;">Quantity</th>
+                  <th style="text-align:right;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for item in cart.items -%}
+                  <tr class="cart-row">
+                    <td class="cart-row__media">
+                      <a href="{{ item.url }}">
+                        <img
+                          class="cart-row__image"
+                          src="{{ item.image | img_url: '200x' }}"
+                          alt="{{ item.title | escape }}"
+                          width="80" height="107"
+                          loading="lazy">
+                      </a>
+                    </td>
+                    <td>
+                      <a href="{{ item.url }}" class="cart-row__name">{{ item.product_title }}</a>
+                      {%- if item.variant.title != 'Default Title' -%}
+                        <p class="cart-row__variant">{{ item.variant.title }}</p>
+                      {%- endif -%}
+                      {%- if item.unit_price_measurement -%}
+                        <p class="cart-row__variant">{{ item.unit_price | money }} / {{ item.unit_price_measurement.reference_value }}{{ item.unit_price_measurement.reference_unit }}</p>
+                      {%- endif -%}
+                      <a href="{{ routes.cart_change_url }}?id={{ item.key }}&quantity=0" class="cart-item__remove" style="display:inline-block; margin-top:0.5rem;">Remove</a>
+                    </td>
+                    <td class="cart-row__qty">
+                      <div class="qty-input" style="justify-content:center;">
+                        <button type="button" class="qty-input__btn" onclick="this.closest('tr').querySelector('.qty-input__num').stepDown(); this.closest('form').submit();">−</button>
+                        <input
+                          class="qty-input__num"
+                          type="number"
+                          name="updates[]"
+                          value="{{ item.quantity }}"
+                          min="0"
+                          data-quantity-input
+                          aria-label="Quantity for {{ item.title }}">
+                        <button type="button" class="qty-input__btn" onclick="this.closest('tr').querySelector('.qty-input__num').stepUp(); this.closest('form').submit();">+</button>
+                      </div>
+                    </td>
+                    <td class="cart-row__price">{{ item.final_line_price | money }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+
+            {%- if section.settings.show_order_note -%}
+              <div class="cart-note">
+                <label for="CartNote">Order note</label>
+                <textarea class="form-textarea" id="CartNote" name="note" placeholder="Add a note for your order...">{{ cart.note }}</textarea>
+              </div>
+            {%- endif -%}
+
+            <button type="submit" name="update" class="btn btn--outline btn--sm" style="margin-top: var(--sp-4);">Update cart</button>
+          </div>
+
+          {%- comment -%} Order summary {%- endcomment -%}
+          <div class="cart-summary">
+            <div class="cart-summary__row">
+              <span>Subtotal</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+            <p class="cart-drawer__shipping" style="margin-top:0; margin-bottom: var(--sp-4);">Shipping and taxes calculated at checkout</p>
+
+            <div class="cart-summary__total">
+              <span>Total</span>
+              <span class="cart-summary__total-amount">{{ cart.total_price | money }}</span>
+            </div>
+
+            <button type="submit" name="checkout" class="btn btn--primary btn--full">Checkout</button>
+
+            {%- if additional_checkout_buttons -%}
+              <div style="margin-top: var(--sp-4);">{{ content_for_additional_checkout_buttons }}</div>
+            {%- endif -%}
+
+            <a href="{{ routes.all_products_collection_url }}" class="cart-drawer__view-all" style="display:block; text-align:center; margin-top: var(--sp-4);">Continue Shopping</a>
+          </div>
+
+        </div>
+      {%- endform -%}
+
+    {%- else -%}
+      <div style="text-align: center; padding: var(--sp-20) 0;">
+        <p style="font-size: var(--text-lg); color: var(--color-text-muted); margin-bottom: var(--sp-6);">Your cart is empty.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">Shop All Products</a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_order_note",
+      "label": "Show order note",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

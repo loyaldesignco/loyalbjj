@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "show_vendor": true,
+        "show_quantity": true,
+        "show_dynamic_checkout": false,
+        "tab_1_title": "Details",
+        "tab_1_content": "<p>Crafted from premium materials built to withstand the demands of training.</p>",
+        "tab_2_title": "Size & Fit",
+        "tab_2_content": "<p>Fits true to size. We recommend sizing up for a looser fit.</p>",
+        "tab_3_title": "Shipping & Returns",
+        "tab_3_content": "<p>Free shipping on orders over $100. Easy 30-day returns on unworn items.</p>"
+      }
+    }
+  },
+  "order": ["main"]
+}

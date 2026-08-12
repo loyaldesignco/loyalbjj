@@ -1,0 +1,189 @@
+{%- assign hero_height = section.settings.height -%}
+{%- assign content_position = section.settings.content_position -%}
+
+<section class="hero hero--{{ hero_height }}">
+
+  {%- if section.settings.image != blank -%}
+    <div class="hero__media">
+      <img
+        class="hero__image"
+        src="{{ section.settings.image | img_url: '2000x' }}"
+        srcset="{{ section.settings.image | img_url: '800x' }} 800w,
+                {{ section.settings.image | img_url: '1200x' }} 1200w,
+                {{ section.settings.image | img_url: '1600x' }} 1600w,
+                {{ section.settings.image | img_url: '2000x' }} 2000w"
+        sizes="100vw"
+        alt="{{ section.settings.image.alt | default: section.settings.heading }}"
+        loading="eager"
+        fetchpriority="high"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}">
+    </div>
+  {%- else -%}
+    <div class="hero__media hero__media--placeholder" style="background: var(--color-bg-alt);">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'hero__placeholder-svg' }}
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.overlay_style != 'none' -%}
+    <div class="hero__overlay hero__overlay--{{ section.settings.overlay_style }}"></div>
+  {%- endif -%}
+
+  <div class="hero__content hero__content--{{ content_position }}">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h1 class="hero__title">{{ section.settings.heading }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="hero__subtitle">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+      <div class="hero__cta-group">
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link }}" class="btn btn--{{ section.settings.button_style }}">
+            {{ section.settings.button_label }}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.button_label_2 != blank -%}
+          <a href="{{ section.settings.button_link_2 }}" class="btn btn--{{ section.settings.button_style_2 }}">
+            {{ section.settings.button_label_2 }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Hero banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        { "value": "full-height", "label": "Full screen" },
+        { "value": "tall", "label": "Tall (80vh)" },
+        { "value": "medium", "label": "Medium (60vh)" }
+      ],
+      "default": "full-height"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Image overlay",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "light", "label": "Light" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "dark", "label": "Dark" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Center left" },
+        { "value": "bottom-left", "label": "Bottom left" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Train with Purpose"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Premium BJJ gear for the dedicated practitioner."
+    },
+    {
+      "type": "header",
+      "content": "Primary button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Solid dark" },
+        { "value": "white", "label": "Solid white" },
+        { "value": "ghost", "label": "Outline white" },
+        { "value": "outline", "label": "Outline dark" }
+      ],
+      "default": "white"
+    },
+    {
+      "type": "header",
+      "content": "Secondary button"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style_2",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Solid dark" },
+        { "value": "white", "label": "Solid white" },
+        { "value": "ghost", "label": "Outline white" },
+        { "value": "outline", "label": "Outline dark" }
+      ],
+      "default": "ghost"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero banner"
+    }
+  ]
+}
+{% endschema %}

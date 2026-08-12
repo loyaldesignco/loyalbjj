@@ -1,0 +1,13 @@
+{
+  "current": {
+    "color_background": "#F5F3EE",
+    "color_background_alt": "#ECEAE4",
+    "color_text": "#1A1A1A",
+    "color_text_muted": "#757575",
+    "color_border": "#E2DED6",
+    "color_accent": "#C8B89A",
+    "body_font_size": 14,
+    "cart_type": "drawer",
+    "animations_enabled": true
+  }
+}

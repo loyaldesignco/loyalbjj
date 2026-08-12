@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-search",
+      "settings": {
+        "search_type": "product,article,page"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,101 @@
+{%- comment -%}
+  Renders a product card.
+  Usage: {% render 'product-card', product: product %}
+{%- endcomment -%}
+
+{%- assign first_available_variant = product.first_available_variant -%}
+
+<article class="product-card" data-product-id="{{ product.id }}">
+  <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
+    <div class="product-card__media">
+
+      {%- if product.featured_image -%}
+        <img
+          class="product-card__image product-card__image--primary"
+          src="{{ product.featured_image | img_url: '600x' }}"
+          srcset="{{ product.featured_image | img_url: '400x' }} 400w,
+                  {{ product.featured_image | img_url: '600x' }} 600w,
+                  {{ product.featured_image | img_url: '800x' }} 800w"
+          sizes="(max-width: 767px) 50vw, 25vw"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+          loading="lazy">
+
+        {%- if product.images.size > 1 -%}
+          <img
+            class="product-card__image product-card__image--alt"
+            src="{{ product.images[1] | img_url: '600x' }}"
+            alt="{{ product.images[1].alt | default: product.title | escape }}"
+            width="{{ product.images[1].width }}"
+            height="{{ product.images[1].height }}"
+            loading="lazy"
+            aria-hidden="true">
+        {%- endif -%}
+      {%- else -%}
+        <div class="product-card__image--primary">
+          {{ 'product-apparel-1' | placeholder_svg_tag }}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Badges {%- endcomment -%}
+      {%- if product.available == false -%}
+        <span class="product-card__badge">Sold Out</span>
+      {%- elsif product.compare_at_price_max > product.price -%}
+        <span class="product-card__badge product-card__badge--sale">Sale</span>
+      {%- elsif product.created_at > 'now' | date: '%s' | minus: 1209600 | date: '%Y-%m-%dT%H:%M:%SZ' -%}
+        <span class="product-card__badge">New</span>
+      {%- endif -%}
+
+      {%- comment -%} Quick add — shows if product has few simple variants {%- endcomment -%}
+      {%- if product.variants.size <= 4 and product.has_only_default_variant == false -%}
+        <div class="product-card__quick-add">
+          {%- for variant in product.variants limit: 4 -%}
+            <button
+              class="product-card__quick-add-opt"
+              data-quick-add="{{ variant.id }}"
+              {%- unless variant.available -%}disabled style="opacity:0.4; cursor:not-allowed;"{%- endunless -%}
+              aria-label="Quick add {{ variant.title }} to cart">
+              {{ variant.title | truncate: 6, '' }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- elsif product.has_only_default_variant -%}
+        <div class="product-card__quick-add">
+          <button
+            class="product-card__quick-add-opt"
+            data-quick-add="{{ product.selected_or_first_available_variant.id }}"
+            {%- unless product.available -%}disabled style="opacity:0.4;"{%- endunless -%}
+            style="flex:1;"
+            aria-label="Quick add {{ product.title }} to cart">
+            {%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+          </button>
+        </div>
+      {%- endif -%}
+
+    </div>
+  </a>
+
+  <div class="product-card__info">
+    {%- if product.vendor != blank -%}
+      <p class="product-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+
+    <div class="product-card__price">
+      {%- if product.price_varies -%}
+        <span>From </span>
+      {%- endif -%}
+
+      {%- if product.compare_at_price_max > product.price -%}
+        <span class="product-card__price--sale">{{ product.price | money }}</span>
+        <span class="product-card__price-compare">{{ product.compare_at_price | money }}</span>
+      {%- else -%}
+        <span>{{ product.price | money }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

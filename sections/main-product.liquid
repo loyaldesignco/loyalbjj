@@ -1,0 +1,248 @@
+<article class="product-page" itemscope itemtype="http://schema.org/Product">
+  <div class="container">
+    <div class="product-layout">
+
+      {%- comment -%} Gallery {%- endcomment -%}
+      <div class="product-gallery">
+        {%- if product.media.size > 0 -%}
+          <div class="product-gallery__main">
+            <img
+              id="ProductMainImage"
+              class="product-gallery__main-img"
+              src="{{ product.featured_media | img_url: '900x' }}"
+              alt="{{ product.featured_media.alt | default: product.title }}"
+              width="{{ product.featured_media.preview_image.width }}"
+              height="{{ product.featured_media.preview_image.height }}"
+              loading="eager">
+          </div>
+
+          {%- if product.media.size > 1 -%}
+            <div class="product-gallery__thumbs">
+              {%- for media in product.media -%}
+                <div class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}"
+                  data-thumb
+                  data-src="{{ media | img_url: '900x' }}">
+                  <img
+                    src="{{ media | img_url: '200x' }}"
+                    alt="{{ media.alt | default: product.title }}"
+                    width="80" height="80"
+                    loading="lazy">
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <div class="product-gallery__main">
+            {{ 'product-1' | placeholder_svg_tag: 'product-gallery__main-img' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Info panel {%- endcomment -%}
+      <div class="product-info">
+
+        {%- if product.vendor != blank and section.settings.show_vendor -%}
+          <p class="product-vendor" itemprop="brand">{{ product.vendor }}</p>
+        {%- endif -%}
+
+        <h1 class="product-title" itemprop="name">{{ product.title }}</h1>
+
+        <div class="product-price" id="ProductPriceBlock" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+          <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">
+          {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+            <span id="ProductComparePrice" class="product-price__compare" itemprop="price" content="{{ product.selected_or_first_available_variant.compare_at_price | divided_by: 100.0 }}">
+              {{ product.selected_or_first_available_variant.compare_at_price | money }}
+            </span>
+            <span id="ProductPrice" class="product-price--sale">{{ product.selected_or_first_available_variant.price | money }}</span>
+          {%- else -%}
+            <span id="ProductComparePrice" hidden></span>
+            <span id="ProductPrice" itemprop="price" content="{{ product.selected_or_first_available_variant.price | divided_by: 100.0 }}">
+              {{ product.selected_or_first_available_variant.price | money }}
+            </span>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Variant data for JS {%- endcomment -%}
+        <script id="ProductVariantData" type="application/json">
+          {{ product.variants | json }}
+        </script>
+
+        {%- form 'product', product, id: 'ProductForm', novalidate: true -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+          {%- comment -%} Option selectors {%- endcomment -%}
+          {%- unless product.has_only_default_variant -%}
+            <div class="product-options">
+              {%- for option in product.options_with_values -%}
+                <div class="product-option" data-option-position="{{ option.position }}">
+                  <div class="product-option__label">
+                    {{ option.name }}:
+                    <span class="product-option__label-value" id="OptionLabel{{ option.position }}">{{ option.selected_value }}</span>
+                  </div>
+                  <div class="product-option__values">
+                    {%- for value in option.values -%}
+                      <button
+                        type="button"
+                        class="product-option__value{% if option.selected_value == value %} is-active{% endif %}"
+                        data-option-value="{{ value }}">
+                        {{ value }}
+                      </button>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+
+          {%- comment -%} Qty + ATC {%- endcomment -%}
+          <div class="product-add">
+            {%- if section.settings.show_quantity -%}
+              <div class="qty-input">
+                <button type="button" class="qty-input__btn" data-qty-minus aria-label="Decrease quantity">−</button>
+                <input class="qty-input__num" type="number" name="quantity" value="1" min="1" aria-label="Quantity">
+                <button type="button" class="qty-input__btn" data-qty-plus aria-label="Increase quantity">+</button>
+              </div>
+            {%- else -%}
+              <input type="hidden" name="quantity" value="1">
+            {%- endif -%}
+
+            <button
+              type="submit"
+              class="btn btn--primary"
+              {%- unless product.selected_or_first_available_variant.available -%}disabled{%- endunless -%}>
+              {%- if product.selected_or_first_available_variant.available -%}
+                Add to Cart
+              {%- else -%}
+                Sold Out
+              {%- endif -%}
+            </button>
+          </div>
+
+          {%- if section.settings.show_dynamic_checkout -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+
+        {%- endform -%}
+
+        <p id="ProductStock" class="product-stock" style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-text-muted); margin-top:-0.5rem; margin-bottom:1rem;" hidden></p>
+
+        {%- comment -%} Product description {%- endcomment -%}
+        {%- if product.description != blank -%}
+          <div class="product-description" itemprop="description">
+            {{ product.description }}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Accordion details {%- endcomment -%}
+        <div class="product-details">
+          <div class="product-accordion">
+
+            {%- if section.settings.tab_1_title != blank and section.settings.tab_1_content != blank -%}
+              <div class="product-accordion__item">
+                <button class="product-accordion__trigger" type="button" aria-expanded="false">
+                  <span>{{ section.settings.tab_1_title }}</span>
+                  <span class="product-accordion__icon" aria-hidden="true">+</span>
+                </button>
+                <div class="product-accordion__body">
+                  <div class="product-accordion__content">{{ section.settings.tab_1_content }}</div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.tab_2_title != blank and section.settings.tab_2_content != blank -%}
+              <div class="product-accordion__item">
+                <button class="product-accordion__trigger" type="button" aria-expanded="false">
+                  <span>{{ section.settings.tab_2_title }}</span>
+                  <span class="product-accordion__icon" aria-hidden="true">+</span>
+                </button>
+                <div class="product-accordion__body">
+                  <div class="product-accordion__content">{{ section.settings.tab_2_content }}</div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.tab_3_title != blank and section.settings.tab_3_content != blank -%}
+              <div class="product-accordion__item">
+                <button class="product-accordion__trigger" type="button" aria-expanded="false">
+                  <span>{{ section.settings.tab_3_title }}</span>
+                  <span class="product-accordion__icon" aria-hidden="true">+</span>
+                </button>
+                <div class="product-accordion__body">
+                  <div class="product-accordion__content">{{ section.settings.tab_3_content }}</div>
+                </div>
+              </div>
+            {%- endif -%}
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "Show quantity selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout button",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Detail tabs"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_title",
+      "label": "Tab 1 title",
+      "default": "Details"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_1_content",
+      "label": "Tab 1 content",
+      "default": "<p>Crafted from premium materials built to withstand the demands of training.</p>"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_title",
+      "label": "Tab 2 title",
+      "default": "Size & Fit"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_2_content",
+      "label": "Tab 2 content",
+      "default": "<p>Fits true to size. We recommend sizing up for a looser fit.</p>"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_title",
+      "label": "Tab 3 title",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_3_content",
+      "label": "Tab 3 content",
+      "default": "<p>Free shipping on orders over $100. Easy 30-day returns.</p>"
+    }
+  ]
+}
+{% endschema %}

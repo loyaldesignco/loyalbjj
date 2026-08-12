@@ -1,0 +1,95 @@
+<div class="search-page">
+  <div class="container">
+
+    <div class="search-form-wrap">
+      <h1 class="search-heading">Search</h1>
+      {%- form 'search', class: 'search-form' -%}
+        <input type="hidden" name="type" value="{{ section.settings.search_type }}">
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="Search..."
+          aria-label="Search"
+          autocomplete="off"
+          autofocus>
+        <button type="submit" aria-label="Submit search">
+          {% render 'icon-search' %}
+        </button>
+      {%- endform -%}
+    </div>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <p style="font-size: var(--text-sm); color: var(--color-text-muted); text-align:center; margin-bottom: var(--sp-8); letter-spacing:0.06em; text-transform:uppercase;">
+          {{ search.results_count }} result{{ search.results_count | pluralize: '', 's' }} for &ldquo;{{ search.terms }}&rdquo;
+        </p>
+
+        <div class="product-grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item %}
+            {%- elsif item.object_type == 'article' -%}
+              <article class="article-card">
+                <a href="{{ item.url }}">
+                  {%- if item.image -%}
+                    <img class="article-card__image" src="{{ item.image | img_url: '600x' }}" alt="{{ item.title }}" loading="lazy">
+                  {%- endif -%}
+                </a>
+                <p class="article-card__tag">{{ item.object_type | capitalize }}</p>
+                <h2 class="article-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h2>
+              </article>
+            {%- else -%}
+              <div>
+                <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">← Prev</a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
+              {%- else -%}
+                <span class="pagination__item{% if part.title == paginate.current_page %} is-current{% endif %}">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">Next →</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- else -%}
+        <p style="text-align:center; color: var(--color-text-muted); font-size: var(--text-base);">
+          No results for &ldquo;{{ search.terms }}&rdquo;. Try a different search term.
+        </p>
+      {%- endif -%}
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Search",
+  "settings": [
+    {
+      "type": "select",
+      "id": "search_type",
+      "label": "Search type",
+      "options": [
+        { "value": "product,article,page", "label": "Products, articles & pages" },
+        { "value": "product", "label": "Products only" },
+        { "value": "product,article", "label": "Products & articles" }
+      ],
+      "default": "product,article,page"
+    }
+  ]
+}
+{% endschema %}

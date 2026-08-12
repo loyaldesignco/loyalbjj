@@ -1,0 +1,24 @@
+{%- comment -%}
+  Renders a price with compare-at handling.
+  Usage: {% render 'price', product: product %}
+{%- endcomment -%}
+
+{%- liquid
+  assign compare_at = product.compare_at_price_max
+  assign price = product.price_min
+  assign on_sale = false
+  if compare_at > price
+    assign on_sale = true
+  endif
+-%}
+
+<div class="price{% if on_sale %} price--on-sale{% endif %}">
+  {%- if product.price_varies -%}
+    <span class="price__min">From {{ price | money }}</span>
+  {%- elsif on_sale -%}
+    <span class="price__current price--sale">{{ price | money }}</span>
+    <s class="price__compare">{{ compare_at | money }}</s>
+  {%- else -%}
+    <span class="price__current">{{ price | money }}</span>
+  {%- endif -%}
+</div>

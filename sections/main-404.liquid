@@ -1,0 +1,18 @@
+<div class="not-found-page">
+  <div class="container">
+    <p class="not-found__code">404</p>
+    <h1 class="not-found__title">Page not found</h1>
+    <p class="not-found__text">The page you were looking for doesn't exist. Try searching or head back to the homepage.</p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="{{ routes.root_url }}" class="btn btn--primary">Back to Home</a>
+      <a href="{{ routes.all_products_collection_url }}" class="btn btn--outline">Shop All</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "404",
+  "settings": []
+}
+{% endschema %}

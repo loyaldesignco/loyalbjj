@@ -1,0 +1,97 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "height": "full-height",
+        "overlay_style": "medium",
+        "content_position": "center",
+        "eyebrow": "New Arrivals",
+        "heading": "Train with Purpose",
+        "subheading": "Premium BJJ gear for the dedicated practitioner.",
+        "button_label": "Shop Now",
+        "button_link": "/collections/all",
+        "button_style": "white",
+        "button_label_2": "Our Story",
+        "button_link_2": "/pages/about",
+        "button_style_2": "ghost"
+      }
+    },
+    "featured-gi": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "The Collection",
+        "title": "Gi & Kimono",
+        "product_limit": 4,
+        "columns_desktop": "4",
+        "show_view_all": true,
+        "header_align": "left",
+        "padding_top": 80,
+        "padding_bottom": 40
+      }
+    },
+    "image-text-1": {
+      "type": "image-with-text",
+      "settings": {
+        "reverse": false,
+        "bg_color": "#ECEAE4",
+        "eyebrow": "No-Gi",
+        "heading": "Built for the Mat",
+        "text": "<p>Every piece in our no-gi collection is engineered for performance — four-way stretch fabrics, flatlock seams, and a fit that stays put through every scramble.</p>",
+        "button_label": "Shop No-Gi",
+        "button_link": "/collections/no-gi",
+        "button_style": "primary",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "featured-nogi": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "No-Gi",
+        "title": "Rash Guards & Shorts",
+        "product_limit": 4,
+        "columns_desktop": "4",
+        "show_view_all": true,
+        "header_align": "left",
+        "padding_top": 80,
+        "padding_bottom": 40
+      }
+    },
+    "image-text-2": {
+      "type": "image-with-text",
+      "settings": {
+        "reverse": true,
+        "bg_color": "#1A1A1A",
+        "eyebrow": "Our Story",
+        "heading": "Loyal to the Art",
+        "text": "<p style='color:rgba(255,255,255,0.7)'>Loyal BJJ was founded by practitioners, for practitioners. We believe the best gear gets out of your way and lets you focus on what matters: your training.</p>",
+        "button_label": "Learn More",
+        "button_link": "/pages/about",
+        "button_style": "ghost",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Join the Community",
+        "heading": "Stay in the Loop",
+        "subtext": "New drops, training tips, and members-only offers.",
+        "placeholder": "Your email address",
+        "button_label": "Subscribe",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "featured-gi",
+    "image-text-1",
+    "featured-nogi",
+    "image-text-2",
+    "newsletter"
+  ]
+}

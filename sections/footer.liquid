@@ -1,0 +1,110 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+
+    <div class="footer-top">
+      {%- comment -%} Brand column {%- endcomment -%}
+      <div class="footer-brand">
+        <a href="{{ routes.root_url }}" class="footer-brand__logo">{{ shop.name }}</a>
+        {%- if section.settings.tagline != blank -%}
+          <p class="footer-brand__tagline">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+
+        <div class="footer-social">
+          {%- if section.settings.instagram_url != blank -%}
+            <a href="{{ section.settings.instagram_url }}" class="footer-social__link" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+          {%- endif -%}
+          {%- if section.settings.facebook_url != blank -%}
+            <a href="{{ section.settings.facebook_url }}" class="footer-social__link" target="_blank" rel="noopener" aria-label="Facebook">FB</a>
+          {%- endif -%}
+          {%- if section.settings.twitter_url != blank -%}
+            <a href="{{ section.settings.twitter_url }}" class="footer-social__link" target="_blank" rel="noopener" aria-label="Twitter / X">X</a>
+          {%- endif -%}
+          {%- if section.settings.tiktok_url != blank -%}
+            <a href="{{ section.settings.tiktok_url }}" class="footer-social__link" target="_blank" rel="noopener" aria-label="TikTok">TT</a>
+          {%- endif -%}
+          {%- if section.settings.youtube_url != blank -%}
+            <a href="{{ section.settings.youtube_url }}" class="footer-social__link" target="_blank" rel="noopener" aria-label="YouTube">YT</a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} Link columns {%- endcomment -%}
+      {%- for i in (1..3) -%}
+        {%- assign menu_setting = 'footer_menu_' | append: i -%}
+        {%- assign title_setting = 'footer_title_' | append: i -%}
+        {%- assign menu_handle = section.settings[menu_setting] -%}
+        {%- assign menu_title = section.settings[title_setting] -%}
+
+        {%- if menu_handle != blank and linklists[menu_handle].links.size > 0 -%}
+          <div class="footer-nav">
+            {%- if menu_title != blank -%}
+              <h3 class="footer-nav__title">{{ menu_title }}</h3>
+            {%- else -%}
+              <h3 class="footer-nav__title">{{ linklists[menu_handle].title }}</h3>
+            {%- endif -%}
+            <ul class="footer-nav__links">
+              {%- for link in linklists[menu_handle].links -%}
+                <li><a href="{{ link.url }}" class="footer-nav__link">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+
+      <div class="footer-payment-icons">
+        {%- for type in shop.enabled_payment_types -%}
+          <span class="footer-payment-icon">{{ type | payment_type_img_url | split: '/' | last | split: '.' | first | upcase }}</span>
+        {%- endfor -%}
+      </div>
+
+      <nav aria-label="Footer legal">
+        {%- if linklists['footer'].links != blank -%}
+          {%- for link in linklists['footer'].links -%}
+            <a href="{{ link.url }}" class="footer-nav__link" style="margin-left:1rem">{{ link.title }}</a>
+          {%- endfor -%}
+        {%- else -%}
+          <a href="/policies/privacy-policy" class="footer-nav__link">Privacy</a>
+          <a href="/policies/terms-of-service" class="footer-nav__link" style="margin-left:1rem">Terms</a>
+          <a href="/policies/refund-policy" class="footer-nav__link" style="margin-left:1rem">Returns</a>
+        {%- endif -%}
+      </nav>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Premium BJJ gear crafted for the modern practitioner."
+    },
+    {
+      "type": "header",
+      "content": "Social links"
+    },
+    { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook URL" },
+    { "type": "url", "id": "twitter_url", "label": "Twitter / X URL" },
+    { "type": "url", "id": "tiktok_url", "label": "TikTok URL" },
+    { "type": "url", "id": "youtube_url", "label": "YouTube URL" },
+    {
+      "type": "header",
+      "content": "Navigation columns"
+    },
+    { "type": "text", "id": "footer_title_1", "label": "Column 1 title", "default": "Shop" },
+    { "type": "link_list", "id": "footer_menu_1", "label": "Column 1 menu", "default": "main-menu" },
+    { "type": "text", "id": "footer_title_2", "label": "Column 2 title", "default": "Info" },
+    { "type": "link_list", "id": "footer_menu_2", "label": "Column 2 menu" },
+    { "type": "text", "id": "footer_title_3", "label": "Column 3 title", "default": "Support" },
+    { "type": "link_list", "id": "footer_menu_3", "label": "Column 3 menu" }
+  ]
+}
+{% endschema %}

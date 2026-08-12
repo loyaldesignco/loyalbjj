@@ -1,0 +1,109 @@
+<div class="collection-page">
+  <div class="container">
+
+    <header class="collection-header">
+      <div class="collection-header__top">
+        <div>
+          {%- if section.settings.show_breadcrumb -%}
+            <nav class="breadcrumb" aria-label="Breadcrumb" style="font-size:var(--text-xs); letter-spacing:0.08em; text-transform:uppercase; color:var(--color-text-muted); margin-bottom:var(--sp-3);">
+              <a href="{{ routes.root_url }}">Home</a>
+              <span style="margin-inline:0.5rem">/</span>
+              <span>{{ collection.title }}</span>
+            </nav>
+          {%- endif -%}
+          <h1 class="collection-title-main">{{ collection.title }}</h1>
+        </div>
+        <p class="collection-count">{{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}</p>
+      </div>
+
+      {%- if collection.description != blank -%}
+        <p class="collection-description">{{ collection.description }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if section.settings.show_sort -%}
+      <div class="collection-controls">
+        <div></div>
+        <div class="collection-sort">
+          <label for="SortBy" style="white-space:nowrap;">Sort by</label>
+          <select id="SortBy" name="sort_by" data-sort-by>
+            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}"{% if option.value == sort_by %} selected{% endif %}>
+                {{ option.name }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if collection.products.size > 0 -%}
+      <div class="product-grid product-grid--{{ section.settings.columns_desktop }}">
+        {%- for product in collection.products -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Pagination {%- endcomment -%}
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" role="navigation" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">← Prev</a>
+          {%- endif -%}
+
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
+            {%- elsif part.title == paginate.current_page -%}
+              <span class="pagination__item is-current" aria-current="page">{{ part.title }}</span>
+            {%- else -%}
+              <span class="pagination__item">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">Next →</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+
+    {%- else -%}
+      <div style="text-align:center; padding: var(--sp-20) 0; color: var(--color-text-muted);">
+        <p style="font-size: var(--text-lg); margin-bottom: var(--sp-4);">No products found.</p>
+        <a href="{{ routes.root_url }}" class="btn btn--outline">Continue Shopping</a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Show sort dropdown",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Products per row (desktop)",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "4"
+    }
+  ]
+}
+{% endschema %}

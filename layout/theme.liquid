@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+  {%- if canonical_url != blank -%}
+    <link rel="canonical" href="{{ canonical_url }}">
+  {%- endif -%}
+
+  {%- if page_title == blank -%}
+    <title>{{ shop.name }}</title>
+  {%- else -%}
+    <title>{{ page_title }}{% unless page_title contains shop.name %} &mdash; {{ shop.name }}{% endunless %}</title>
+  {%- endif -%}
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  {{ content_for_header }}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  <script>
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+  </script>
+</head>
+
+<body class="template-{{ template.name }}{% if customer %} customer-logged-in{% endif %}">
+
+  <a href="#MainContent" class="skip-link">Skip to content</a>
+
+  {%- comment -%} Cart Drawer {%- endcomment -%}
+  <div id="CartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Shopping cart">
+    <div class="cart-drawer__overlay" data-cart-close></div>
+    <div class="cart-drawer__panel">
+      <div class="cart-drawer__head">
+        <h2 class="cart-drawer__title">Cart</h2>
+        <button class="icon-btn" aria-label="Close cart" data-cart-close>
+          {% render 'icon-close' %}
+        </button>
+      </div>
+      <div class="cart-drawer__body" id="CartDrawerBody">
+        <div class="cart-drawer__empty">
+          <p>Your cart is empty.</p>
+          <a href="/collections/all" class="btn btn--outline btn--sm">Shop Now</a>
+        </div>
+      </div>
+      <div class="cart-drawer__foot" id="CartDrawerFoot" hidden>
+        <div class="cart-drawer__subtotal-row">
+          <span>Subtotal</span>
+          <span id="CartSubtotal" class="cart-drawer__subtotal-amount"></span>
+        </div>
+        <p class="cart-drawer__shipping">Shipping &amp; taxes calculated at checkout</p>
+        <a href="/checkout" class="btn btn--primary btn--full" id="CartCheckout">Checkout</a>
+        <a href="/cart" class="cart-drawer__view-all">View full cart</a>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Mobile Navigation {%- endcomment -%}
+  <div id="MobileNav" class="mobile-nav" aria-hidden="true" role="dialog" aria-label="Navigation">
+    <div class="mobile-nav__overlay" data-nav-close></div>
+    <div class="mobile-nav__panel">
+      <div class="mobile-nav__head">
+        <a href="{{ routes.root_url }}" class="mobile-nav__logo">{{ shop.name }}</a>
+        <button class="icon-btn" aria-label="Close menu" data-nav-close>
+          {% render 'icon-close' %}
+        </button>
+      </div>
+      <nav class="mobile-nav__body" role="navigation">
+        {%- for link in linklists['main-menu'].links -%}
+          {%- if link.links != blank -%}
+            <div class="mobile-nav__group">
+              <button class="mobile-nav__parent" data-mobile-accordion>
+                {{ link.title }}
+                <span class="mobile-nav__chevron">{% render 'icon-chevron' %}</span>
+              </button>
+              <div class="mobile-nav__children" hidden>
+                {%- for child in link.links -%}
+                  <a href="{{ child.url }}" class="mobile-nav__child">{{ child.title }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- else -%}
+            <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+      <div class="mobile-nav__foot">
+        {%- if customer -%}
+          <a href="{{ routes.account_url }}" class="mobile-nav__account-link">Account</a>
+          <a href="{{ routes.account_logout_url }}" class="mobile-nav__account-link">Sign Out</a>
+        {%- else -%}
+          <a href="{{ routes.account_login_url }}" class="mobile-nav__account-link">Sign In</a>
+          <a href="{{ routes.account_register_url }}" class="mobile-nav__account-link">Create Account</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {% section 'announcement-bar' %}
+  {% section 'header' %}
+
+  <main id="MainContent" class="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {% section 'footer' %}
+
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+</body>
+</html>

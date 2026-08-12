@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "show_breadcrumb": true,
+        "show_sort": true,
+        "columns_desktop": "4"
+      }
+    }
+  },
+  "order": ["main"]
+}

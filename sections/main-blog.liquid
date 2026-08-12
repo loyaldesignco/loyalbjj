@@ -1,0 +1,77 @@
+<div class="blog-page">
+  <div class="container">
+    <div class="section-header" style="margin-bottom: var(--sp-10);">
+      <h1 class="section-title">{{ blog.title }}</h1>
+    </div>
+
+    {%- if blog.articles_count > 0 -%}
+      <div class="article-grid">
+        {%- for article in blog.articles -%}
+          <article class="article-card">
+            <a href="{{ article.url }}">
+              {%- if article.image -%}
+                <img
+                  class="article-card__image"
+                  src="{{ article.image | img_url: '800x' }}"
+                  alt="{{ article.image.alt | default: article.title }}"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                  loading="lazy">
+              {%- else -%}
+                <div class="article-card__image" style="background: var(--color-bg-alt); display:flex; align-items:center; justify-content:center; color: var(--color-text-muted);">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {%- endif -%}
+            </a>
+
+            {%- if article.tags.size > 0 -%}
+              <p class="article-card__tag">{{ article.tags | first }}</p>
+            {%- endif -%}
+
+            <h2 class="article-card__title">
+              <a href="{{ article.url }}">{{ article.title }}</a>
+            </h2>
+
+            {%- if article.excerpt != blank -%}
+              <p class="article-card__excerpt">{{ article.excerpt | strip_html | truncate: 120 }}</p>
+            {%- endif -%}
+
+            <time class="article-card__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+              {{ article.published_at | date: '%B %d, %Y' }}
+            </time>
+          </article>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" role="navigation" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">← Prev</a>
+          {%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
+            {%- elsif part.title == paginate.current_page -%}
+              <span class="pagination__item is-current">{{ part.title }}</span>
+            {%- else -%}
+              <span class="pagination__item">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">Next →</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- else -%}
+      <p style="color: var(--color-text-muted);">No articles found.</p>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Blog",
+  "settings": []
+}
+{% endschema %}
