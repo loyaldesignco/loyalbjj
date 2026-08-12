@@ -63,9 +63,10 @@
       "settings": {
         "reverse": true,
         "bg_color": "#1A1A1A",
+        "text_color": "#FFFFFF",
         "eyebrow": "Our Story",
         "heading": "Loyal to the Art",
-        "text": "<p style='color:rgba(255,255,255,0.7)'>Loyal BJJ was founded by practitioners, for practitioners. We believe the best gear gets out of your way and lets you focus on what matters: your training.</p>",
+        "text": "<p>Loyal BJJ was founded by practitioners, for practitioners. We believe the best gear gets out of your way and lets you focus on what matters: your training.</p>",
         "button_label": "Learn More",
         "button_link": "/pages/about",
         "button_style": "ghost",

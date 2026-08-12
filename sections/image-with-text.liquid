@@ -19,17 +19,17 @@
     {%- endif -%}
   </div>
 
-  <div class="image-with-text__content" style="background: {{ section.settings.bg_color }};">
+  <div class="image-with-text__content" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="image-with-text__eyebrow">{{ section.settings.eyebrow }}</p>
+      <p class="image-with-text__eyebrow" style="color: {{ section.settings.text_color | color_modify: 'alpha', 0.6 }};">{{ section.settings.eyebrow }}</p>
     {%- endif -%}
 
     {%- if section.settings.heading != blank -%}
-      <h2 class="image-with-text__title">{{ section.settings.heading }}</h2>
+      <h2 class="image-with-text__title" style="color: {{ section.settings.text_color }};">{{ section.settings.heading }}</h2>
     {%- endif -%}
 
     {%- if section.settings.text != blank -%}
-      <div class="image-with-text__text">{{ section.settings.text }}</div>
+      <div class="image-with-text__text" style="color: {{ section.settings.text_color | color_modify: 'alpha', 0.7 }};">{{ section.settings.text }}</div>
     {%- endif -%}
 
     {%- if section.settings.button_label != blank -%}
@@ -62,6 +62,12 @@
       "id": "bg_color",
       "label": "Content background color",
       "default": "#ECEAE4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1A1A1A"
     },
     {
       "type": "header",

@@ -43,7 +43,7 @@
         <span class="product-card__badge">Sold Out</span>
       {%- elsif product.compare_at_price_max > product.price -%}
         <span class="product-card__badge product-card__badge--sale">Sale</span>
-      {%- elsif product.created_at > 'now' | date: '%s' | minus: 1209600 | date: '%Y-%m-%dT%H:%M:%SZ' -%}
+      {%- elsif product.tags contains 'new' or product.tags contains 'New' -%}
         <span class="product-card__badge">New</span>
       {%- endif -%}
 

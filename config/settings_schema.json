@@ -52,16 +52,8 @@
     "name": "Typography",
     "settings": [
       {
-        "type": "font_picker",
-        "id": "heading_font",
-        "label": "Heading font",
-        "default": "cormorant_garamond_n4"
-      },
-      {
-        "type": "font_picker",
-        "id": "body_font",
-        "label": "Body font",
-        "default": "inter_n4"
+        "type": "paragraph",
+        "content": "Fonts are loaded via Google Fonts in the theme layout. Heading: Cormorant Garamond. Body: Inter."
       },
       {
         "type": "range",
